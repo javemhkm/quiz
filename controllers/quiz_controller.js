@@ -35,7 +35,7 @@ exports.create = function(req, res) {
 			res.render('/quizes/new', {quiz: quiz, errors: err.errors});
 		} else {
 			//guarda en DB los campos pregunta y respuesta de quiz
-			quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+			quiz.save({fields: ["pregunta", "respuesta", "tema"]}).then(function(){
 			res.redirect('/quizes');})	// res.redirect: Redirección HTTP a lista de preguntas
 		}
 	});
@@ -50,7 +50,7 @@ exports.show = function(req, res) {
 exports.answer = function(req, res) {
 	var resultado = 'Incorrecto';
 	if (req.query.respuesta === req.quiz.respuesta){
-		resultado = 'correcto';
+		resultado = 'Correcto';
 	}
 	res.render ('quizes/answer', {quiz: req.quiz, respuesta: resultado, errors: []});
 };
@@ -65,13 +65,14 @@ exports.edit = function(req, res) {
 exports.update = function(req, res) {
 	req.quiz.pregunta = req.body.quiz.pregunta;
 	req.quiz.respuesta = req.body.quiz.respuesta;
+	req.quiz.tema = req.body.quiz.tema;
 	
 	req.quiz.validate().then(function(err){
 		if(err) {
 			res.render('/quizes/edit', {quiz: quiz, errors: err.errors});
 		} else {
 			//save: guarda campos pregunta y respuesta en DB
-			req.quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
+			req.quiz.save({fields: ["pregunta", "respuesta", "tema"]}).then(function(){
 				res.redirect('/quizes');
 			})	// res.redirect: Redirección HTTP a lista de preguntas (URL relativo)
 		}
