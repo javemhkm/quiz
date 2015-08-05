@@ -1,14 +1,21 @@
 <table>
+	<tr>
+		<td colspan="4">
+			<form name="buscador" method="GET" action="/quizes">
+				Búsqueda de preguntas:
+				<input type="text" name="search" />
+				<input type="submit" name="buscar" value="Buscar" />
+			</form>
+		</td>
+	</tr>
 	<% var i; for (i=0; i < quizes.length; i++) { %>
 		<tr>
-		<td>(<%= quizes[i].tema %>)</td>
-		<td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
+			<td>(<%= quizes[i].tema %>)</td>
+			<td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %></a></td>
 			<td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
 			<td>
 				<form method="post" action="quizes/<%= quizes[i].id %>?_method=delete">
-					<button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta %>');">
-						borrar
-					</button>
+					<button type="submit" onClick="return confirm('Borrar: <%= quizes[i].pregunta %>');">Borrar</button>
 				</form>
 			</td>
 		</tr>
