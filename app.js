@@ -28,6 +28,29 @@ app.use(session());
 app.use(methodOverride('_method'));
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Auto-logout
+app.use(function(req, res, next) {
+	if (req.session.user) {
+		var segundos = new Date().getTime() / 1000;
+		// en la variable de sesion "ahora" guardo el tiempo actual en segundos
+		if (req.session.ahora) {
+			if ((segundos - req.session.ahora) > 120) { // si han pasado 2 minutos (120 segundos), se destruye la sesion
+				delete req.session.user;
+				delete req.session.ahora;
+				res.redirect("/login"); // Redirecciona a la pagina de login
+			} else { // si no han pasado 2 minutos, actualizo la variable "ahora"
+				req.session.ahora = segundos;
+				next();
+			}
+		} else { // Si no existe, se crea y se inicializa la variable "ahora"
+			req.session.ahora = segundos;
+			next();
+		}
+	} else {
+		next();
+	}
+});
+
 // Helpers dinamicos:
 app.use(function(req, res, next) {
 	// guardar path en session.redir para despues de login
@@ -73,6 +96,5 @@ app.use(function(err, req, res, next) {
 		errors: []
     });
 });
-
 
 module.exports = app;
